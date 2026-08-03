@@ -1,15 +1,52 @@
+import { request } from '../../../api';
 import type { Todo, TodoCreateRequest, TodoUpdateRequest } from '../types';
 
-/*
- * TODO API 전용 파일입니다.
- * 인증 API와 동일한 공통 request 함수를 재사용할 수 있도록
- * frontend/src/api.ts의 request 공개 여부를 먼저 팀에서 결정해 주세요.
- */
 export type TodoApi = {
-  findByDateRange(from: string, to: string): Promise<Todo[]>;
-  findById(todoId: number): Promise<Todo>;
+  findByDateRange(userId: number, from: string, to: string): Promise<Todo[]>;
+  findById(todoId: number, userId: number): Promise<Todo>;
   create(request: TodoCreateRequest): Promise<Todo>;
-  update(todoId: number, request: TodoUpdateRequest): Promise<Todo>;
-  changeCompleted(todoId: number, completed: boolean): Promise<Todo>;
-  remove(todoId: number): Promise<void>;
+  update(todoId: number, userId: number, request: TodoUpdateRequest): Promise<Todo>;
+  complete(todoId: number, userId: number): Promise<Todo>;
+  remove(todoId: number, userId: number): Promise<void>;
+};
+
+function userQuery(userId: number) {
+  return new URLSearchParams({ userId: String(userId) });
+}
+
+export const todoApi: TodoApi = {
+  findByDateRange(userId, from, to) {
+    const params = new URLSearchParams({ userId: String(userId), from, to });
+    return request<Todo[]>(`/api/todos?${params.toString()}`, {}, true);
+  },
+
+  findById(todoId, userId) {
+    return request<Todo>(`/api/todos/${todoId}?${userQuery(userId).toString()}`, {}, true);
+  },
+
+  create(createRequest) {
+    return request<Todo>('/api/todos', {
+      method: 'POST',
+      body: JSON.stringify(createRequest),
+    }, true);
+  },
+
+  update(todoId, userId, updateRequest) {
+    return request<Todo>(`/api/todos/${todoId}?${userQuery(userId).toString()}`, {
+      method: 'PUT',
+      body: JSON.stringify(updateRequest),
+    }, true);
+  },
+
+  complete(todoId, userId) {
+    return request<Todo>(`/api/todos/${todoId}/complete?${userQuery(userId).toString()}`, {
+      method: 'PATCH',
+    }, true);
+  },
+
+  remove(todoId, userId) {
+    return request<void>(`/api/todos/${todoId}?${userQuery(userId).toString()}`, {
+      method: 'DELETE',
+    }, true);
+  },
 };

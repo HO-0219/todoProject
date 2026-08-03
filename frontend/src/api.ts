@@ -5,14 +5,16 @@ export type ProviderResponse = { google: boolean; kakao: boolean };
 export type MeResponse = { userId: number; username: string; email: string; name: string; role: string };
 export type ApiError = { code?: string; message?: string; fieldErrors?: Record<string, string> };
 
-async function request<T>(path: string, init: RequestInit = {}, authenticated = false): Promise<T> {
+export async function request<T>(path: string, init: RequestInit = {}, authenticated = false): Promise<T> {
   const headers = new Headers(init.headers);
   if (init.body) headers.set('Content-Type', 'application/json');
   if (authenticated) {
     const token = localStorage.getItem('accessToken');
     if (token) headers.set('Authorization', `Bearer ${token}`);
   }
-  const response = await fetch(`${API_BASE}${path}`, { ...init, headers, credentials: 'include' });
+  const apiOrigin = API_BASE.replace(/\/api\/v1$/, '');
+  const url = path.startsWith('/api/') ? `${apiOrigin}${path}` : `${API_BASE}${path}`;
+  const response = await fetch(url, { ...init, headers, credentials: 'include' });
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: '요청 처리 중 오류가 발생했습니다.' }));
     throw error as ApiError;

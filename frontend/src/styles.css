@@ -60,4 +60,9 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .todo-placeholder strong { font-size: 20px; }
 .todo-placeholder p, .todo-placeholder li { color: #6f788c; }
 .todo-placeholder ul { display: grid; gap: 10px; padding-left: 22px; }
+.todo-state { min-height: 240px; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 32px; border: 1px solid #e1e5ee; border-radius: 18px; background: rgba(255,255,255,.78); text-align: center; }
+.todo-state p { margin: 0; color: #697187; }
+.todo-loading-spinner { width: 36px; height: 36px; border: 4px solid #dfe4fb; border-top-color: #4359c4; border-radius: 50%; animation: todo-spin .8s linear infinite; }
+@keyframes todo-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .todo-loading-spinner { animation: none; border-top-color: #dfe4fb; background: #4359c4; } }
 @media (max-width: 800px) { .auth-page { display: block; }.brand { display: none; }.auth-card { padding: 42px 24px; }.mobile-logo { display: inline-block; margin-bottom: 28px; font: 700 20px Manrope; }.auth-card h2 { font-size: 27px; }.todo-header { flex-wrap: wrap; gap: 12px; padding: 12px 20px; }.todo-logo { margin-right: auto; }.todo-user span { display: none; }.todo-nav { order: 3; width: 100%; justify-content: space-around; }.todo-nav a { flex: 1; text-align: center; }.todo-main { width: min(100% - 28px, 1180px); padding: 30px 0; }.todo-page-header { align-items: start; }.todo-page-header h1 { font-size: 27px; }.todo-page-header .primary { min-height: auto; white-space: nowrap; }.todo-placeholder { min-height: 340px; padding: 26px 22px; } }
