@@ -2,12 +2,22 @@ import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { api, MeResponse } from '../api';
 
+// 백엔드 로그인 연동 전, Todo UI를 바로 확인하기 위한 임시 설정입니다.
+const DEMO_MODE = true;
+const DEMO_USER: MeResponse = { userId: 0, username: 'demo', email: 'demo@example.com', name: '데모 사용자', role: 'USER' };
+
 export function TodoLayout() {
   const navigate = useNavigate();
   const [me, setMe] = useState<MeResponse>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (DEMO_MODE) {
+      setMe(DEMO_USER);
+      setLoading(false);
+      return;
+    }
+
     async function authenticate() {
       try {
         if (!localStorage.getItem('accessToken')) {
@@ -25,6 +35,7 @@ export function TodoLayout() {
   }, []);
 
   async function logout() {
+    if (DEMO_MODE) return;
     await api.logout().catch(() => undefined);
     localStorage.removeItem('accessToken');
     navigate('/login');

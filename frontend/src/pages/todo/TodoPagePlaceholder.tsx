@@ -1,19 +1,27 @@
 type TodoPagePlaceholderProps = {
-  title: string;
-  description: string;
-  items: string[];
+  title?: string;
+  description?: string;
+  actionLabel?: string;
+  onAction?: () => void;
+  variant?: 'empty' | 'error';
 };
 
-export function TodoPagePlaceholder({ title, description, items }: TodoPagePlaceholderProps) {
-  return <section className="todo-page">
-    <header className="todo-page-header">
-      <div><p>TODO CALENDAR</p><h1>{title}</h1><span>{description}</span></div>
-      <button className="primary" type="button" disabled>TODO 추가</button>
-    </header>
-    <div className="todo-placeholder">
-      <strong>구현 예정 영역</strong>
-      <p>화면 구조만 준비되어 있습니다. 아래 기능을 순서대로 구현해 주세요.</p>
-      <ul>{items.map(item => <li key={item}>{item}</li>)}</ul>
-    </div>
+/**
+ * 이름은 기존 파일을 유지하지만, 더 이상 "구현 예정" 화면이 아닙니다.
+ * API 연결 후에도 빈 목록과 오류 상태에서 공통으로 사용합니다.
+ */
+export function TodoPagePlaceholder({
+  title = '아직 등록한 할 일이 없어요.',
+  description = '작은 일부터 하나씩 추가해 오늘의 흐름을 만들어 보세요.',
+  actionLabel = '새 할 일 추가',
+  onAction,
+  variant = 'empty',
+}: TodoPagePlaceholderProps) {
+  const isError = variant === 'error';
+  return <section className={`todo-empty-state ${isError ? 'is-error' : ''}`} role={isError ? 'alert' : undefined}>
+    <span className="todo-empty-icon" aria-hidden="true">{isError ? '!' : '✓'}</span>
+    <strong>{isError ? '할 일을 불러오지 못했어요.' : title}</strong>
+    <p>{isError ? '네트워크 상태를 확인한 후 다시 시도해 주세요.' : description}</p>
+    {onAction && <button className="todo-empty-action" type="button" onClick={onAction}>{isError ? '다시 시도하기' : actionLabel}</button>}
   </section>;
 }
