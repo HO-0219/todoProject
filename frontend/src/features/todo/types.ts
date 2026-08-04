@@ -14,5 +14,4 @@ export type Todo = {
 };
 
 export type TodoCreateRequest = Pick<Todo, 'title' | 'description' | 'todoDate'>;
-<<<<<<< HEAD
 export type TodoUpdateRequest = Pick<Todo, 'title' | 'description' | 'todoDate'>;
