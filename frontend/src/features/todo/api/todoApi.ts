@@ -2,50 +2,46 @@ import { request } from '../../../api';
 import type { Todo, TodoCreateRequest, TodoUpdateRequest } from '../types';
 
 export type TodoApi = {
-  findByDateRange(userId: number, from: string, to: string): Promise<Todo[]>;
-  findById(todoId: number, userId: number): Promise<Todo>;
+  findByDateRange(from: string, to: string): Promise<Todo[]>;
+  findById(todoId: number): Promise<Todo>;
   create(request: TodoCreateRequest): Promise<Todo>;
-  update(todoId: number, userId: number, request: TodoUpdateRequest): Promise<Todo>;
-  complete(todoId: number, userId: number): Promise<Todo>;
-  remove(todoId: number, userId: number): Promise<void>;
+  update(todoId: number, request: TodoUpdateRequest): Promise<Todo>;
+  complete(todoId: number): Promise<Todo>;
+  remove(todoId: number): Promise<void>;
 };
 
-function userQuery(userId: number) {
-  return new URLSearchParams({ userId: String(userId) });
-}
-
 export const todoApi: TodoApi = {
-  findByDateRange(userId, from, to) {
-    const params = new URLSearchParams({ userId: String(userId), from, to });
-    return request<Todo[]>(`/api/todos?${params.toString()}`, {}, true);
+  findByDateRange(from, to) {
+    const params = new URLSearchParams({ from, to });
+    return request<Todo[]>(`/todos?${params.toString()}`, {}, true);
   },
 
-  findById(todoId, userId) {
-    return request<Todo>(`/api/todos/${todoId}?${userQuery(userId).toString()}`, {}, true);
+  findById(todoId) {
+    return request<Todo>(`/todos/${todoId}`, {}, true);
   },
 
   create(createRequest) {
-    return request<Todo>('/api/todos', {
+    return request<Todo>('/todos', {
       method: 'POST',
       body: JSON.stringify(createRequest),
     }, true);
   },
 
-  update(todoId, userId, updateRequest) {
-    return request<Todo>(`/api/todos/${todoId}?${userQuery(userId).toString()}`, {
+  update(todoId, updateRequest) {
+    return request<Todo>(`/todos/${todoId}`, {
       method: 'PUT',
       body: JSON.stringify(updateRequest),
     }, true);
   },
 
-  complete(todoId, userId) {
-    return request<Todo>(`/api/todos/${todoId}/complete?${userQuery(userId).toString()}`, {
+  complete(todoId) {
+    return request<Todo>(`/todos/${todoId}/complete`, {
       method: 'PATCH',
     }, true);
   },
 
-  remove(todoId, userId) {
-    return request<void>(`/api/todos/${todoId}?${userQuery(userId).toString()}`, {
+  remove(todoId) {
+    return request<void>(`/todos/${todoId}`, {
       method: 'DELETE',
     }, true);
   },
