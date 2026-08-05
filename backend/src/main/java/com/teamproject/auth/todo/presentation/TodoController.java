@@ -7,6 +7,7 @@ import com.teamproject.auth.todo.presentation.dto.TodoCreateRequest;
 import com.teamproject.auth.todo.presentation.dto.TodoResponse;
 import com.teamproject.auth.todo.presentation.dto.TodoUpdateRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/todos")
+@RequestMapping("/api/v1/todos")
 public class TodoController {
 
     private final TodoService todoService;
@@ -27,11 +28,13 @@ public class TodoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TodoResponse createTodo(
+            // JWT에서 확인된 로그인 사용자의 ID
+            @AuthenticationPrincipal Long userId,
             @RequestBody TodoCreateRequest request
             ){
         // 요청 DTO의 값을 서비스에 전달하여 Todo를 생성
         Todo todo = todoService.createTodo(
-                request.getUserId(), request.getTitle(),
+                userId, request.getTitle(),
                 request.getDescription(), request.getTodoDate()
         );
         // 생성된 Entity를 응답 DTO로 변환
@@ -41,7 +44,7 @@ public class TodoController {
     @GetMapping("/{todoId}")
     public TodoResponse getTodo(
             @PathVariable Long todoId,
-            @RequestParam Long userId
+            @AuthenticationPrincipal Long userId
     ){
         Todo todo = todoService.getTodo(todoId, userId);
 
@@ -51,7 +54,7 @@ public class TodoController {
     // 날짜 범위에 해당하는 Todo 목록을 조회하는 API
     @GetMapping
     public List<TodoResponse> getTodoByDateRange(
-            @RequestParam Long userId,
+            @AuthenticationPrincipal Long userId,
             @RequestParam LocalDate from,
             @RequestParam LocalDate to
         ){
@@ -63,7 +66,7 @@ public class TodoController {
     @PutMapping("/{todoId}")
     public TodoResponse updateTodo(
             @PathVariable Long todoId,
-            @RequestParam Long userId,
+            @AuthenticationPrincipal Long userId,
             @RequestBody TodoUpdateRequest request
             ){
         Todo updatedTodo = todoService.updateTodo(
@@ -77,7 +80,7 @@ public class TodoController {
     @PatchMapping("/{todoId}/complete")
     public TodoResponse completeTodo(
             @PathVariable Long todoId,
-            @RequestParam Long userId
+            @AuthenticationPrincipal Long userId
     ) {
         Todo completedTodo = todoService.completeTodo(todoId, userId);
 
@@ -89,7 +92,7 @@ public class TodoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTodo(
             @PathVariable Long todoId,
-            @RequestParam Long userId
+            @AuthenticationPrincipal Long userId
     ) {
         todoService.deleteTodo(todoId, userId);
     }

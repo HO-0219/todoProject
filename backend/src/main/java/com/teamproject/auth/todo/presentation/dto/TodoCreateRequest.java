@@ -4,16 +4,14 @@ import java.time.LocalDate;
 
 public class TodoCreateRequest {
 
-    private Long userId;
+    
     private String title;
     private String description;
     private LocalDate todoDate;
 
     public TodoCreateRequest(){   }
 
-    public Long getUserId(){
-        return userId;
-    }
+    
     public String getTitle(){
         return title;
     }
