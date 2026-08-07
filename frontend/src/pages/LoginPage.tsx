@@ -14,7 +14,7 @@ export function LoginPage() {
   useEffect(() => { api.providers().then(setProviders).catch(() => undefined); }, []);
   async function submit(event: FormEvent) {
     event.preventDefault(); setPending(true); setError('');
-    try { const tokens = await api.login(username, password); localStorage.setItem('accessToken', tokens.accessToken); navigate('/'); }
+    try { const tokens = await api.login(username, password); localStorage.setItem('accessToken', tokens.accessToken); navigate('/day'); }
     catch (caught) { setError(errorMessage(caught)); } finally { setPending(false); }
   }
   return <AuthLayout title="로그인" description="팀 프로젝트에 다시 오신 것을 환영합니다.">

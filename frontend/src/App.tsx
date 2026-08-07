@@ -8,6 +8,7 @@ import { FindUsernamePage, ForgotPasswordPage, ResetPasswordPage } from './pages
 import { DailyPage } from './pages/todo/DailyPage';
 import { MonthlyPage } from './pages/todo/MonthlyPage';
 import { WeeklyPage } from './pages/todo/WeeklyPage';
+import { LandingPage } from './pages/LandingPage';
 
 function OAuthCallbackPage() {
   const navigate = useNavigate(); const [failed, setFailed] = useState(false);
@@ -17,8 +18,8 @@ function OAuthCallbackPage() {
 
 export default function App() {
   return <BrowserRouter><Routes>
+    <Route path="/" element={<LandingPage />} />
     <Route element={<TodoLayout />}>
-      <Route path="/" element={<Navigate to="/day" replace />} />
       <Route path="/month" element={<MonthlyPage />} />
       <Route path="/week" element={<WeeklyPage />} />
       <Route path="/day" element={<DailyPage />} />

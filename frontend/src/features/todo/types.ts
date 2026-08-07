@@ -5,13 +5,13 @@
 export type Todo = {
   id: number;
   title: string;
-  description?: string;
+  description: string | null;
   todoDate: string;
   completed: boolean;
-  completedAt?: string;
+  completedAt: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type TodoCreateRequest = Pick<Todo, 'title' | 'description' | 'todoDate'>;
-export type TodoUpdateRequest = Partial<TodoCreateRequest>;
+export type TodoUpdateRequest = Pick<Todo, 'title' | 'description' | 'todoDate'>;

@@ -9,12 +9,12 @@ import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<Todo,Long> {
 
-    // 특정 사용자의 Todo를 날짜 범위로 여러 개 조회
-    List<Todo> findByUser_IdAndTodoDateBetween(
-            Long userId,
-            LocalDate from,
-            LocalDate to
-          );
+   // 미완료 Todo를 먼저 조회하고, 같은 상태에서는 생성 순서로 정렬
+List<Todo> findByUser_IdAndTodoDateBetweenOrderByCompletedAscCreatedAtAsc(
+        Long userId,
+        LocalDate from,
+        LocalDate to
+);
     // Todo ID와 소유자 ID가 모두 일치하는 Todo 한 개 조회
     Optional<Todo> findByIdAndUser_Id(Long todoId, Long userId);
 
