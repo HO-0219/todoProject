@@ -21,7 +21,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfiguration(frontendUrl)))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //IF_REQUIRED-> STATELESS / JWT 인증은 서버 세션을 사용하지 않음
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/health", "/api/v1/auth/providers").permitAll()
                         .requestMatchers(HttpMethod.POST,
