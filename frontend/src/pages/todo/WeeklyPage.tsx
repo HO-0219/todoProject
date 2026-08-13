@@ -33,7 +33,7 @@ const loadWeeklyTodos = useCallback(async () => {
     setTodos(result);
   } catch (error) {
     console.error('주간 Todo 조회 실패:', error);
-    window.alert('주간 할 일을 불러오지 못했습니다.');
+    window.alert('주간 일정을 불러오지 못했습니다.');
   }
 }, [selectedDate]);
 
@@ -64,14 +64,14 @@ async function addTodo(event: React.FormEvent) {
     await loadWeeklyTodos();
   } catch (error) {
     console.error('주간 Todo 등록 실패:', error);
-    window.alert('할 일을 추가하지 못했습니다.');
+    window.alert('일정을 추가하지 못했습니다.');
   }
 }
 
 // 미완료 Todo를 완료 처리
 async function completeTodo(todo: Todo) {
   if (todo.completed) {
-    window.alert('완료된 할 일은 현재 다시 미완료로 변경할 수 없습니다.');
+    window.alert('완료된 일정은 현재 다시 미완료로 변경할 수 없습니다.');
     return;
   }
 
@@ -87,7 +87,7 @@ async function completeTodo(todo: Todo) {
 // Todo 제목 수정
 async function editTodo(todo: Todo) {
   const nextTitle = window
-    .prompt('할 일 내용을 수정하세요.', todo.title)
+    .prompt('일정 내용을 수정하세요.', todo.title)
     ?.trim();
 
   if (!nextTitle) return;
@@ -102,24 +102,24 @@ async function editTodo(todo: Todo) {
     await loadWeeklyTodos();
   } catch (error) {
     console.error('Todo 수정 실패:', error);
-    window.alert('할 일을 수정하지 못했습니다.');
+    window.alert('일정을 수정하지 못했습니다.');
   }
 }
 
 // Todo 삭제
 async function removeTodo(id: number) {
-  if (!window.confirm('이 할 일을 삭제할까요?')) return;
+  if (!window.confirm('이 일정을 삭제할까요?')) return;
 
   try {
     await todoApi.remove(id);
     await loadWeeklyTodos();
   } catch (error) {
     console.error('Todo 삭제 실패:', error);
-    window.alert('할 일을 삭제하지 못했습니다.');
+    window.alert('일정을 삭제하지 못했습니다.');
   }
 }
   
   
   const label = `${weekStart.getMonth() + 1}월 ${weekStart.getDate()}일 - ${weekDates[6].getMonth() + 1}월 ${weekDates[6].getDate()}일`;
-  return <section className="planner-page weekly-planner"><header className="planner-intro"><div><p>WEEKLY PLANNER</p><h1>이번 주의 흐름을<br /><strong>한눈에 정리하세요.</strong></h1><span>완료 {completed}개 · 남은 할 일 {todos.length - completed}개</span></div><CalendarNav date={selectedDate} label={label} onChange={setSelectedDate} onPrevious={() => moveWeek(-1)} onNext={() => moveWeek(1)} onToday={() => setSelectedDate(today)} todayLabel="이번 주" /></header><form className="planner-add-bar" onSubmit={addTodo}><select value={day} onChange={(event) => setDay(Number(event.target.value))}>{days.map((item, index) => <option value={index} key={item}>{item}요일</option>)}</select><input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="이번 주에 할 일을 추가하세요" /><button type="submit">+ 할 일 추가</button></form>{todos.length === 0 ? <TodoPagePlaceholder onAction={() => document.querySelector<HTMLInputElement>('.planner-add-bar input')?.focus()} /> : <div className="week-grid">{days.map((item, index) => <section className={`week-day-card ${index === 0 ? 'is-sunday' : ''}`} key={item}><header><span>{item}</span><strong>{weekDates[index].getDate()}</strong></header><div>{todos.filter((todo) => todo.todoDate === toDateKey(weekDates[index])).map((todo) => <article className={`week-todo ${todo.completed ? 'is-complete' : ''}`} key={todo.id}><button className="daily-check" type="button" onClick={() => void completeTodo(todo)}>{todo.completed && '✓'}</button><strong>{todo.title}</strong><div className="todo-item-actions"><button type="button" onClick={() => editTodo(todo)}>수정</button><button className="todo-delete" type="button" onClick={() => removeTodo(todo.id)}>삭제</button></div></article>)}</div><button className="week-add-day" type="button" onClick={() => { setDay(index); document.querySelector<HTMLInputElement>('.planner-add-bar input')?.focus(); }}>+ 추가</button></section>)}</div>}</section>;
+  return <section className="planner-page weekly-planner"><header className="planner-intro"><div><p>WEEKLY PLANNER</p><h1>이번 주의 흐름을<br /><strong>한눈에 정리하세요.</strong></h1><span>완료 {completed}개 · 남은 일정 {todos.length - completed}개</span></div><CalendarNav date={selectedDate} label={label} onChange={setSelectedDate} onPrevious={() => moveWeek(-1)} onNext={() => moveWeek(1)} onToday={() => setSelectedDate(today)} todayLabel="이번 주" /></header><form className="planner-add-bar" onSubmit={addTodo}><select value={day} onChange={(event) => setDay(Number(event.target.value))}>{days.map((item, index) => <option value={index} key={item}>{item}요일</option>)}</select><input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="이번 주 일정을 추가하세요" /><button type="submit">+ 일정 추가</button></form>{todos.length === 0 ? <TodoPagePlaceholder onAction={() => document.querySelector<HTMLInputElement>('.planner-add-bar input')?.focus()} /> : <div className="week-grid">{days.map((item, index) => <section className={`week-day-card ${index === 0 ? 'is-sunday' : ''}`} key={item}><header><span>{item}</span><strong>{weekDates[index].getDate()}</strong></header><div>{todos.filter((todo) => todo.todoDate === toDateKey(weekDates[index])).map((todo) => <article className={`week-todo ${todo.completed ? 'is-complete' : ''}`} key={todo.id}><button className="daily-check" type="button" onClick={() => void completeTodo(todo)}>{todo.completed && '✓'}</button><strong>{todo.title}</strong><div className="todo-item-actions"><button type="button" onClick={() => editTodo(todo)}>수정</button><button className="todo-delete" type="button" onClick={() => removeTodo(todo.id)}>삭제</button></div></article>)}</div><button className="week-add-day" type="button" onClick={() => { setDay(index); document.querySelector<HTMLInputElement>('.planner-add-bar input')?.focus(); }}>+ 추가</button></section>)}</div>}</section>;
 }

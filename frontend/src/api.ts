@@ -34,6 +34,9 @@ export const api = {
   resetPassword: (email: string, token: string, newPassword: string) => request<void>('/auth/password-resets/confirm', { method: 'POST', body: JSON.stringify({ email, token, newPassword }) }),
   providers: () => request<ProviderResponse>('/auth/providers'),
   me: () => request<MeResponse>('/auth/me', {}, true),
+
+  withdraw: () => request<void>('/auth/me', { method: 'DELETE' }, true), // 추가 
+
   socialUrl: (provider: 'google' | 'kakao') => `${API_BASE.replace(/\/api\/v1$/, '')}/oauth2/authorization/${provider}`,
 };
 

@@ -3,6 +3,7 @@ package com.teamproject.auth.service;
 import com.teamproject.auth.api.AuthDtos.*;
 import com.teamproject.auth.api.AuthException;
 import com.teamproject.auth.security.JwtService;
+import com.teamproject.auth.todo.domain.repository.TodoRepository;
 import com.teamproject.auth.user.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -11,11 +12,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
+
 @Service
 public class AuthService {
     public record IssuedTokens(TokenResponse response, String refreshToken) {}
     private final UserRepository users;
     private final SocialAccountRepository socialAccounts;
+   
+    private final TodoRepository todos;
+    
     private final PasswordEncoder passwordEncoder;
     private final OneTimeTokenService oneTimeTokens;
     private final RefreshTokenService refreshTokens;
@@ -23,10 +28,12 @@ public class AuthService {
     private final MailService mail;
     private final String frontendUrl;
 
+    
+
     public AuthService(UserRepository users, SocialAccountRepository socialAccounts, PasswordEncoder passwordEncoder,
-            OneTimeTokenService oneTimeTokens, RefreshTokenService refreshTokens, JwtService jwt, MailService mail,
+            OneTimeTokenService oneTimeTokens, RefreshTokenService refreshTokens, JwtService jwt, MailService mail, TodoRepository todos,
             @Value("${app.frontend-url}") String frontendUrl) {
-        this.users = users; this.socialAccounts = socialAccounts; this.passwordEncoder = passwordEncoder;
+        this.users = users; this.socialAccounts = socialAccounts; this.todos = todos; this.passwordEncoder = passwordEncoder;
         this.oneTimeTokens = oneTimeTokens; this.refreshTokens = refreshTokens; this.jwt = jwt; this.mail = mail; this.frontendUrl = frontendUrl;
     }
     @Transactional public SignupResponse signup(SignupRequest request) {
@@ -49,6 +56,27 @@ public class AuthService {
         return issue(user);
     }
     @Transactional public void logout(String raw) { refreshTokens.revoke(raw); }
+    
+    @Transactional
+    public void withdraw(Long userId, String rawRefreshToken) {
+
+    User user = users.findById(userId)
+            .orElseThrow(() -> new AuthException(
+                    "USER_NOT_FOUND",
+                    HttpStatus.NOT_FOUND,
+                    "사용자를 찾을 수 없습니다."
+            ));
+
+    // 사용자의 Refresh Token 전체 삭제
+    refreshTokens.deleteAllByUserId(userId);
+    // 소셜 로그인 연결 정보 삭제
+    socialAccounts.deleteByUser_Id(userId);
+    // 사용자의 Todo 전체 삭제
+    todos.deleteByUser_Id(userId);
+    // 마지막으로 사용자 삭제
+    users.delete(user); }
+    
+       
     @Transactional(readOnly = true) public MeResponse me(Long id) {
         User user = users.findById(id).orElseThrow(() -> new AuthException("USER_NOT_FOUND", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
         return new MeResponse(user.getId(), user.getUsername(), user.getEmail(), user.getName(), user.getRole().name());

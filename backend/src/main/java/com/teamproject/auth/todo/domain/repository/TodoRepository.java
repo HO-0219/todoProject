@@ -18,4 +18,7 @@ List<Todo> findByUser_IdAndTodoDateBetweenOrderByCompletedAscCreatedAtAsc(
     // Todo ID와 소유자 ID가 모두 일치하는 Todo 한 개 조회
     Optional<Todo> findByIdAndUser_Id(Long todoId, Long userId);
 
+    // 회원 탈퇴 시 해당 사용자의 Todo 전체 삭제
+    void deleteByUser_Id(Long userId);
+
 }

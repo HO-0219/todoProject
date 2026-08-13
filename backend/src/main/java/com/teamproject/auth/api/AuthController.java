@@ -50,5 +50,14 @@ public class AuthController {
     }
     @GetMapping("/providers") ProviderResponse providers() { return new ProviderResponse(google, kakao); }
     @GetMapping("/me") MeResponse me(Authentication authentication) { return auth.me((Long) authentication.getPrincipal()); }
+
+  
+    @DeleteMapping("/me")
+          ResponseEntity<Void> withdraw(Authentication authentication,
+          @CookieValue(name = RefreshCookieService.NAME, required = false) String refreshToken,
+        HttpServletResponse response) 
+        { auth.withdraw((Long) authentication.getPrincipal(), refreshToken);
+          cookies.clear(response);
+          return ResponseEntity.noContent().build();} 
 }
 

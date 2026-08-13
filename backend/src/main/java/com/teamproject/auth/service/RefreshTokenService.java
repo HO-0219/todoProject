@@ -33,10 +33,16 @@ public class RefreshTokenService {
         return token.getUser();
     }
     @Transactional public void revoke(String raw) { if (raw != null) repository.findByTokenHash(hashService.sha256(raw)).ifPresent(RefreshToken::revoke); }
+
+    // 회원 탈퇴 시 해당 사용자의 Refresh Token 전체 삭제
+    @Transactional public void deleteAllByUserId(Long userId) {repository.deleteByUser_Id(userId);}
+
     private RefreshToken find(String raw) {
         if (raw == null || raw.isBlank()) throw invalid();
         return repository.findByTokenHash(hashService.sha256(raw)).orElseThrow(this::invalid);
     }
+
+
     private AuthException invalid() { return new AuthException("REFRESH_TOKEN_INVALID", HttpStatus.UNAUTHORIZED, "로그인이 만료되었습니다."); }
     public long refreshSeconds() { return refreshSeconds; }
 }

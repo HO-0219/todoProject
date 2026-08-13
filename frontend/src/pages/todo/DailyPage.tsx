@@ -200,13 +200,13 @@ async function removeTodo(id: number) {
     <div className="daily-grid">
       <section className="daily-todos-card">
         <div className="daily-card-heading">
-          <div><p>MY TASKS</p><h2>오늘의 할 일 <span>{todos.length}</span></h2></div>
-          <button className="daily-more" type="button" aria-label="할 일 더보기">•••</button>
+          <div><p>MY TASKS</p><h2>오늘의 일정 <span>{todos.length}</span></h2></div>
+          <button className="daily-more" type="button" aria-label="일정 더보기">•••</button>
         </div>
 
         <form className="daily-add-form" onSubmit={addTodo}>
           <span>+</span>
-          <input value={newTodo} onChange={(event) => setNewTodo(event.target.value)} placeholder="새로운 할 일을 입력하세요" />
+          <input value={newTodo} onChange={(event) => setNewTodo(event.target.value)} placeholder="새로운 일정을 입력하세요" />
           <button type="submit">추가</button>
         </form>
 
@@ -229,9 +229,9 @@ async function removeTodo(id: number) {
       <aside className="daily-side-column">
         <section className="daily-progress-card">
           <p>DAILY PROGRESS</p>
-          <div className="daily-progress-main"><strong>{progress}<small>%</small></strong><span>완료한 할 일<br /><b>{completed} / {todos.length}</b></span></div>
+          <div className="daily-progress-main"><strong>{progress}<small>%</small></strong><span>완료한 일정<br /><b>{completed} / {todos.length}</b></span></div>
           <div className="daily-progress-track"><i style={{ width: `${progress}%` }} /></div>
-          <p className="daily-progress-message">{completed === todos.length ? '오늘의 할 일을 모두 끝냈어요!' : '조금만 더 하면 오늘의 계획을 마칠 수 있어요.'}</p>
+          <p className="daily-progress-message">{completed === todos.length ? '오늘의 일정을 모두 끝냈어요!' : '조금만 더 하면 오늘의 계획을 마칠 수 있어요.'}</p>
         </section>
 
         <section className="daily-focus-card">
