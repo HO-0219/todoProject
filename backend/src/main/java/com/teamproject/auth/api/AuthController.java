@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -51,7 +53,16 @@ public class AuthController {
     @GetMapping("/providers") ProviderResponse providers() { return new ProviderResponse(google, kakao); }
     @GetMapping("/me") MeResponse me(Authentication authentication) { return auth.me((Long) authentication.getPrincipal()); }
 
+    @PutMapping("/me") public MeResponse updateMe(
+         @AuthenticationPrincipal Long userId,
+         @Valid @RequestBody MeUpdateRequest request){return auth.updateMe(userId, request);}
   
+    @PutMapping("/me/password") public ResponseEntity<Void> changePassword(
+        @AuthenticationPrincipal Long userId,
+        @Valid @RequestBody PasswordChangeRequest request) {
+              auth.changePassword(userId, request);
+              return ResponseEntity.noContent().build(); }
+
     @DeleteMapping("/me")
           ResponseEntity<Void> withdraw(Authentication authentication,
           @CookieValue(name = RefreshCookieService.NAME, required = false) String refreshToken,

@@ -81,6 +81,27 @@ public class AuthService {
         User user = users.findById(id).orElseThrow(() -> new AuthException("USER_NOT_FOUND", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
         return new MeResponse(user.getId(), user.getUsername(), user.getEmail(), user.getName(), user.getRole().name());
     }
+
+    @Transactional public MeResponse updateMe(Long id, MeUpdateRequest request) {
+         User user = users.findById(id)
+            .orElseThrow(() -> new AuthException(
+                    "USER_NOT_FOUND",
+                    HttpStatus.NOT_FOUND,
+                    "사용자를 찾을 수 없습니다."
+            ));
+
+           user.changeName(request.name().trim());
+
+          return new MeResponse(
+                  user.getId(),
+                  user.getUsername(),
+                  user.getEmail(),
+                  user.getName(),
+                  user.getRole().name()
+         );
+      }
+
+
     @Transactional public void sendVerification(String rawEmail) {
         String email = normalizeEmail(rawEmail);
         if (users.existsByEmailIgnoreCase(email)) throw conflict("EMAIL_EXISTS", "이미 가입된 이메일입니다.");
@@ -104,6 +125,27 @@ public class AuthService {
         oneTimeTokens.consumeResetToken(email, request.token());
         user.changePassword(passwordEncoder.encode(request.newPassword()));
     }
+
+    @Transactional public void changePassword(Long userId, PasswordChangeRequest request) {
+          User user = users.findById(userId)
+            .orElseThrow(() -> new AuthException(
+                    "USER_NOT_FOUND",
+                    HttpStatus.NOT_FOUND,
+                    "사용자를 찾을 수 없습니다."
+            ));
+
+    // 현재 비밀번호 확인
+          if (user.getPasswordHash() == null ||
+                  !passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
+             throw new AuthException(
+                    "INVALID_PASSWORD",
+                    HttpStatus.BAD_REQUEST,
+                    "현재 비밀번호가 올바르지 않습니다."  ); }
+
+    // 새 비밀번호 암호화 후 변경
+           user.changePassword(passwordEncoder.encode(request.newPassword()));}
+
+
     @Transactional public IssuedTokens socialLogin(String provider, String subject, String rawEmail, String name) {
         return socialAccounts.findByProviderAndProviderSubject(provider, subject).map(SocialAccount::getUser).map(this::issue)
                 .orElseGet(() -> {

@@ -16,14 +16,25 @@ public final class AuthDtos {
     ) {}
     public record LoginRequest(@NotBlank String username, @NotBlank String password) {}
     public record PasswordResetRequest(@NotBlank @Email String email) {}
+    
+    
     public record PasswordResetConfirmRequest(
             @NotBlank @Email String email,
             @NotBlank String token,
-            @NotBlank @Size(min = 8, max = 72) String newPassword
-    ) {}
+            @NotBlank @Size(min = 8, max = 72) String newPassword ) {}
+
+     public record PasswordChangeRequest(
+        @NotBlank String currentPassword,
+        @NotBlank @Size(min = 8, max = 72) String newPassword) {}
+
+
     public record TokenResponse(String accessToken, String tokenType, long expiresIn) {}
     public record SignupResponse(Long userId, String username, String email, String name) {}
     public record MeResponse(Long userId, String username, String email, String name, String role) {}
+    
+    public record MeUpdateRequest(
+        @NotBlank @Size(min = 2, max = 60) String name ) {}
+    
     public record ProviderResponse(boolean google, boolean kakao) {}
     public record MessageResponse(String message) {}
 }

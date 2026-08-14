@@ -42,6 +42,9 @@ public class User {
     }
 
     public void changePassword(String passwordHash) { this.passwordHash = passwordHash; }
+    
+    public void changeName(String name) {this.name = name;}
+       
     public void recordLogin() { this.lastLoginAt = LocalDateTime.now(); }
     public Long getId() { return id; }
     public String getUsername() { return username; }
