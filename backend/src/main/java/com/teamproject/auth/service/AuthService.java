@@ -53,6 +53,27 @@ public class AuthService {
         User user = users.findById(id).orElseThrow(() -> new AuthException("USER_NOT_FOUND", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
         return new MeResponse(user.getId(), user.getUsername(), user.getEmail(), user.getName(), user.getRole().name());
     }
+
+    @Transactional public MeResponse updateMe(Long id, MeUpdateRequest request) {
+         User user = users.findById(id)
+            .orElseThrow(() -> new AuthException(
+                    "USER_NOT_FOUND",
+                    HttpStatus.NOT_FOUND,
+                    "사용자를 찾을 수 없습니다."
+            ));
+
+           user.changeName(request.name().trim());
+
+          return new MeResponse(
+                  user.getId(),
+                  user.getUsername(),
+                  user.getEmail(),
+                  user.getName(),
+                  user.getRole().name()
+         );
+      }
+
+
     @Transactional public void sendVerification(String rawEmail) {
         String email = normalizeEmail(rawEmail);
         if (users.existsByEmailIgnoreCase(email)) throw conflict("EMAIL_EXISTS", "이미 가입된 이메일입니다.");

@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react';
-import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { api, MeResponse } from '../api';
+import { useEffect, useState } from "react";
+import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { api, MeResponse } from "../api";
+import { BrandLogo } from "../components/BrandLogo";
 
 // 백엔드 로그인 연동 전, Todo UI를 바로 확인하기 위한 임시 설정입니다.
-const DEMO_MODE = true;
-const DEMO_USER: MeResponse = { userId: 0, username: 'demo', email: 'demo@example.com', name: '데모 사용자', role: 'USER' };
+const DEMO_MODE = false;
+const DEMO_USER: MeResponse = {
+  userId: 0,
+  username: "demo",
+  email: "demo@example.com",
+  name: "데모 사용자",
+  role: "USER",
+};
 
 export function TodoLayout() {
   const navigate = useNavigate();
@@ -20,13 +27,13 @@ export function TodoLayout() {
 
     async function authenticate() {
       try {
-        if (!localStorage.getItem('accessToken')) {
+        if (!localStorage.getItem("accessToken")) {
           const token = await api.refresh();
-          localStorage.setItem('accessToken', token.accessToken);
+          localStorage.setItem("accessToken", token.accessToken);
         }
         setMe(await api.me());
       } catch {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem("accessToken");
       } finally {
         setLoading(false);
       }
@@ -37,23 +44,37 @@ export function TodoLayout() {
   async function logout() {
     if (DEMO_MODE) return;
     await api.logout().catch(() => undefined);
-    localStorage.removeItem('accessToken');
-    navigate('/login');
+    localStorage.removeItem("accessToken");
+    navigate("/login", { replace: true }); //<- navigate('/login');
   }
-
   if (loading) return <main className="center-page">인증 상태 확인 중...</main>;
   if (!me) return <Navigate to="/login" replace />;
 
-  return <div className="todo-app">
-    <header className="todo-header">
-      <NavLink to="/day" className="todo-logo"><span className="brand-mark">T</span><strong>TODO Calendar</strong></NavLink>
-      <nav className="todo-nav" aria-label="TODO 보기 방식">
-        <NavLink to="/month">월간</NavLink>
-        <NavLink to="/week">주간</NavLink>
-        <NavLink to="/day">일간</NavLink>
-      </nav>
-      <div className="todo-user"><span>{me.name}님</span><button className="secondary" onClick={logout}>로그아웃</button></div>
-    </header>
-    <main className="todo-main"><Outlet context={{ me }} /></main>
-  </div>;
+  return (
+    <div className="todo-app">
+      <header className="todo-header">
+        <NavLink to="/dashboard" className="todo-logo">
+          <BrandLogo />
+        </NavLink>
+        <nav className="todo-nav" aria-label="일정 보기 방식">
+          <NavLink to="/dashboard">대시보드</NavLink>
+          <NavLink to="/month">월간</NavLink>
+          <NavLink to="/week">주간</NavLink>
+          <NavLink to="/day">일간</NavLink>
+        </nav>
+        <div className="todo-user">
+          <span>{me.name}님</span>
+          <button className="secondary" onClick={logout}>
+            로그아웃
+          </button>
+          <NavLink className="mypage-button" to="/mypage">
+            마이페이지
+          </NavLink>
+        </div>
+      </header>
+      <main className="todo-main">
+        <Outlet context={{ me }} />
+      </main>
+    </div>
+  );
 }

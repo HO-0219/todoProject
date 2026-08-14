@@ -13,5 +13,11 @@ export type Todo = {
   updatedAt: string;
 };
 
-export type TodoCreateRequest = Pick<Todo, 'title' | 'description' | 'todoDate'>;
-export type TodoUpdateRequest = Pick<Todo, 'title' | 'description' | 'todoDate'>;
+export type TodoCreateRequest = Pick<
+  Todo,
+  "title" | "description" | "todoDate"
+>;
+export type TodoUpdateRequest = Pick<
+  Todo,
+  "title" | "description" | "todoDate"
+>;
