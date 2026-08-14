@@ -24,10 +24,6 @@ public final class AuthDtos {
     public record TokenResponse(String accessToken, String tokenType, long expiresIn) {}
     public record SignupResponse(Long userId, String username, String email, String name) {}
     public record MeResponse(Long userId, String username, String email, String name, String role) {}
-    
-    public record MeUpdateRequest(
-        @NotBlank @Size(min = 2, max = 60) String name ) {}
-    
     public record ProviderResponse(boolean google, boolean kakao) {}
     public record MessageResponse(String message) {}
 }
