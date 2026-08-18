@@ -15,6 +15,9 @@ List<Todo> findByUser_IdAndTodoDateBetweenOrderByCompletedAscCreatedAtAsc(
         LocalDate from,
         LocalDate to
 );
+    //사용자의 전체 Todo를 날짜순으로 조회 
+    List<Todo> findByUser_IdOrderByTodoDateAscCreatedAtAsc(Long userId);
+
     // Todo ID와 소유자 ID가 모두 일치하는 Todo 한 개 조회
     Optional<Todo> findByIdAndUser_Id(Long todoId, Long userId);
 

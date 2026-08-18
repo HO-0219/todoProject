@@ -7,9 +7,15 @@ import com.teamproject.auth.todo.presentation.dto.TodoCreateRequest;
 import com.teamproject.auth.todo.presentation.dto.TodoResponse;
 import com.teamproject.auth.todo.presentation.dto.TodoUpdateRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
+
+//import java.net.http.HttpHeaders;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -96,5 +102,29 @@ public class TodoController {
     ) {
         todoService.deleteTodo(todoId, userId);
     }
+
+    // 로그인 사용자의 Todo를 .ics파일로 내보내기 
+    @GetMapping("/export")
+    public ResponseEntity<String> exportCalendar(
+            @AuthenticationPrincipal Long userId) {
+
+            List<Todo> todos = todoService.getTodosByUser(userId);
+
+            String ics = todoService.createIcs(todos);
+            
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=gearviame-calendar.ics")
+                                      .contentType(MediaType.parseMediaType("text/calender")).body(ics);}
+             
+                 
+    // .ics 파일 업로드 
+    @PostMapping("/import")
+    public ResponseEntity<String> importCalendar(
+            @AuthenticationPrincipal Long userId, @RequestParam("file") MultipartFile file)
+           {return ResponseEntity.ok("파일 업로드 확인");}      
+    
+            
+
+
+
 
 }

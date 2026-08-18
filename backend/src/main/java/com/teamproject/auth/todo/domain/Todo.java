@@ -77,6 +77,13 @@ public class Todo {
         this.completedAt = LocalDateTime.now();
 
     }
+      // Todo 완료 상태를 해제하고 완료 시간을 비움
+    public void uncomplete() {
+        this.completed = false;
+        this.completedAt = null;
+    }
+
+    
     // 처음 DB에 저장되기 직전에 생성·수정 시간을 기록
     @PrePersist
     protected void onCreate(){

@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 // Todo의 생성·조회·수정·완료·삭제 작업을 처리하는 서비스
@@ -113,16 +114,21 @@ public class TodoService {
         return todo;
     }
 
-    // 사용자 소유의 Todo를 완료 상태로 변경
+   // 사용자 소유의 Todo 완료 상태를 변경
     @Transactional
     public Todo completeTodo(Long todoId, Long userId) {
-        // Todo ID와 사용자 ID를 함께 확인
-        Todo todo = findOwnedTodo(todoId, userId);
+    // Todo ID와 사용자 ID를 함께 확인
+         Todo todo = findOwnedTodo(todoId, userId);
 
-         // 지난 날짜의 Todo는 완료 상태 변경 금지
-        validateEditableTodo(todo);
+    // 지난 날짜의 Todo는 완료 상태 변경 금지
+         validateEditableTodo(todo);
 
-        todo.complete();
+    // 현재 상태에 따라 완료 / 완료 해제
+         if (todo.isCompleted()) {
+             todo.uncomplete();
+          } else {
+            todo.complete();
+       }
 
         return todo;
     }
@@ -219,4 +225,41 @@ public class TodoService {
             );
         }
     }
+
+    // 로그인 사용자의 전체 Todo를 날짜순으로 조회 
+    @Transactional(readOnly = true)
+    public List<Todo>getTodosByUser(Long userId){
+        return todoRepository.findByUser_IdOrderByTodoDateAscCreatedAtAsc(userId);
+    }
+
+    // ToDo 목록을 캘린더(.ics) 형식의 문자열로 변환 
+    public String createIcs(List<Todo> todos){
+
+        StringBuilder ics = new StringBuilder();
+
+        // 캘린더 파일 시작 
+        ics. append("BEGIN:VCALENDAR\r\n");
+        ics. append("VERSION:2.0\r\n");
+        ics. append("PRODID:-//GearViaMe//Calendar//KO\r\n");
+
+        //Todo 하나씩 일정으로 변환
+        for (Todo todo: todos){
+              
+            String date = todo.getTodoDate().format(DateTimeFormatter.BASIC_ISO_DATE);
+            ics.append("BEGIN:VEVENT\r\n");
+            ics.append("UID:").append(todo.getId()).append("@gearviame\r\n");
+            ics.append("DTSTART;VALUE=DATE:").append(date).append("\r\n");
+            ics.append("SUMMARY:").append(todo.getTitle()).append("\r\n");
+            ics.append("DESCRIPTION:").append(todo.getDescription() == null ? "" : todo.getDescription()).append("\r\n");
+            ics.append("END:VEVENT\r\n");
+             }
+    
+        // 캘린더 파일 끝
+        ics.append("END:VCALENDAR\r\n");
+
+        return ics.toString();
+             
+    }
+
+
 }

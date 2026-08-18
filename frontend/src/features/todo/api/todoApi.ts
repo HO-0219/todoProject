@@ -1,12 +1,12 @@
-import { request } from '../../../api';
-import type { Todo, TodoCreateRequest, TodoUpdateRequest } from '../types';
+import { request } from "../../../api";
+import type { Todo, TodoCreateRequest, TodoUpdateRequest } from "../types";
 
 export type TodoApi = {
   findByDateRange(from: string, to: string): Promise<Todo[]>;
   findById(todoId: number): Promise<Todo>;
   create(request: TodoCreateRequest): Promise<Todo>;
   update(todoId: number, request: TodoUpdateRequest): Promise<Todo>;
-  complete(todoId: number): Promise<Todo>;
+  toggleCompletion(todoId: number): Promise<Todo>;
   remove(todoId: number): Promise<void>;
 };
 
@@ -21,28 +21,44 @@ export const todoApi: TodoApi = {
   },
 
   create(createRequest) {
-    return request<Todo>('/todos', {
-      method: 'POST',
-      body: JSON.stringify(createRequest),
-    }, true);
+    return request<Todo>(
+      "/todos",
+      {
+        method: "POST",
+        body: JSON.stringify(createRequest),
+      },
+      true,
+    );
   },
 
   update(todoId, updateRequest) {
-    return request<Todo>(`/todos/${todoId}`, {
-      method: 'PUT',
-      body: JSON.stringify(updateRequest),
-    }, true);
+    return request<Todo>(
+      `/todos/${todoId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(updateRequest),
+      },
+      true,
+    );
   },
 
-  complete(todoId) {
-    return request<Todo>(`/todos/${todoId}/complete`, {
-      method: 'PATCH',
-    }, true);
+  toggleCompletion(todoId) {
+    return request<Todo>(
+      `/todos/${todoId}/complete`,
+      {
+        method: "PATCH",
+      },
+      true,
+    );
   },
 
   remove(todoId) {
-    return request<void>(`/todos/${todoId}`, {
-      method: 'DELETE',
-    }, true);
+    return request<void>(
+      `/todos/${todoId}`,
+      {
+        method: "DELETE",
+      },
+      true,
+    );
   },
 };
