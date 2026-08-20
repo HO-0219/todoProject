@@ -51,6 +51,31 @@ export async function request<T>(
   return response.status === 204 ? (undefined as T) : response.json();
 }
 
+export async function requestBlob(
+  path: string,
+  init: RequestInit = {},
+): Promise<Blob> {
+  const headers = new Headers(init.headers);
+  const token = localStorage.getItem("accessToken");
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const apiOrigin = API_BASE.replace(/\/api\/v1$/, "");
+  const url = path.startsWith("/api/")
+    ? `${apiOrigin}${path}`
+    : `${API_BASE}${path}`;
+  const response = await fetch(url, {
+    ...init,
+    headers,
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ message: "파일을 내려받지 못했습니다." }));
+    throw error as ApiError;
+  }
+  return response.blob();
+}
+
 export const api = {
   sendVerification: (email: string) =>
     request<void>("/auth/email-verifications", {

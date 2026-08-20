@@ -70,14 +70,18 @@ export function useTodos({ from, to, rangeLabel }: UseTodosOptions) {
         return;
       }
       try {
-        await todoApi.toggleCompletion(todo.id);
-        await reload();
+        const updatedTodo = await todoApi.toggleCompletion(todo.id);
+        setTodos((currentTodos) =>
+          currentTodos.map((currentTodo) =>
+            currentTodo.id === updatedTodo.id ? updatedTodo : currentTodo,
+          ),
+        );
       } catch (error) {
         console.error("일정 완료 처리 실패:", error);
         window.alert("완료 상태를 변경하지 못했습니다.");
       }
     },
-    [reload],
+    [],
   );
 
   const editTodo = useCallback(

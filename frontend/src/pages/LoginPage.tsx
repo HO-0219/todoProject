@@ -27,7 +27,7 @@ export function LoginPage() {
     try {
       const tokens = await api.login(username, password);
       localStorage.setItem("accessToken", tokens.accessToken);
-      navigate("/day");
+      navigate("/dashboard");
     } catch (caught) {
       setError(errorMessage(caught));
     } finally {

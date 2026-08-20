@@ -26,10 +26,9 @@ export function MyPage() {
   }
 
   const fields = [
-    ["이름", me?.name ?? ""],
-    ["아이디", me?.username ?? ""],
-    ["이메일", me?.email ?? ""],
-    ["회원 유형", me?.role ?? ""],
+    ["이름", me?.name || "정보 없음"],
+    ["아이디", me?.username || "정보 없음"],
+    ["이메일", me?.email || "정보 없음"],
   ];
 
   return (
@@ -43,17 +42,21 @@ export function MyPage() {
       <section className="mypage-profile-card">
         <header>
           <div className="mypage-avatar">{me?.name?.charAt(0) || "–"}</div>
-          <div>
+          <div className="mypage-profile-copy">
+            <span>GEARVIA ME PROFILE</span>
             <h2>{me?.name ? `${me.name}님` : "회원정보 준비 중"}</h2>
-            <p>백엔드 회원정보가 연결되면 자동으로 표시됩니다.</p>
+            <p>나만의 일정과 계획을 한곳에서 관리하고 있습니다.</p>
           </div>
+          <span className="mypage-account-badge">내 계정</span>
         </header>
         <div className="mypage-fields">
           {fields.map(([label, value]) => (
-            <label key={label}>
-              <span>{label}</span>
-              <input value={value} readOnly placeholder=" " />
-            </label>
+            <article key={label}>
+              <div>
+                <span>{label}</span>
+                <strong>{value}</strong>
+              </div>
+            </article>
           ))}
         </div>
       </section>

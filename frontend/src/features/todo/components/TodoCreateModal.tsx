@@ -91,7 +91,7 @@ export function TodoCreateModal({
   const [day, setDay] = useState(selectableInitialDate.getDate());
   const [title, setTitle] = useState("");
   const [openPicker, setOpenPicker] = useState<"month" | "day" | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const year = selectableInitialDate.getFullYear();
   const daysInMonth = useMemo(() => getDaysInMonth(year, month), [month, year]);
   const monthValues = useMemo(() => {
@@ -221,15 +221,22 @@ export function TodoCreateModal({
 
           <label className="todo-modal-content-field">
             <span>일정 내용</span>
-            <input
+            <textarea
               ref={inputRef}
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder="새로운 일정을 입력하세요"
               maxLength={100}
+              rows={4}
               disabled={pending}
               required
             />
+            <small
+              className={`todo-content-counter ${title.length >= 90 ? "is-near-limit" : ""}`}
+              aria-live="polite"
+            >
+              {title.length}/100
+            </small>
           </label>
 
           <div className="todo-modal-actions">

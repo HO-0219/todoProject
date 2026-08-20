@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { Todo } from "../types";
 import { toDateKey } from "../utils/dateUtils";
 import { isPastDateKey } from "../utils/dateUtils";
@@ -22,8 +23,24 @@ export function WeeklyGrid({
   onEdit,
   onDelete,
 }: WeeklyGridProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const todayIndex = dates.findIndex(
+      (date) => toDateKey(date) === toDateKey(new Date()),
+    );
+    if (todayIndex < 0) {
+      grid.scrollLeft = 0;
+      return;
+    }
+    const todayCard = grid.children.item(todayIndex) as HTMLElement | null;
+    if (todayCard) grid.scrollLeft = todayCard.offsetLeft - grid.offsetLeft;
+  }, [dates]);
+
   return (
-    <div className="week-grid">
+    <div className="week-grid" ref={gridRef}>
       {weekdays.map((weekday, index) => (
         <section
           className={`week-day-card ${index === 0 ? "is-sunday" : ""}`}

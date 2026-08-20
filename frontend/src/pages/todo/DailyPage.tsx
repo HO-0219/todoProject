@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CalendarNav } from "../../features/todo/components/CalendarNav";
-import { DailySummary } from "../../features/todo/components/DailySummary";
 import { DailyTodoList } from "../../features/todo/components/DailyTodoList";
+import { PlannerMemo } from "../../features/todo/components/PlannerMemo";
+import { PlannerAdBanner } from "../../features/todo/components/PlannerAdBanner";
 import { TodoCreateModal } from "../../features/todo/components/TodoCreateModal";
 import { useTodos } from "../../features/todo/hooks/useTodos";
 import { addDays, toDateKey } from "../../features/todo/utils/dateUtils";
@@ -23,8 +24,6 @@ export function DailyPage() {
     to: selectedDateKey,
     rangeLabel: "일간",
   });
-  const completed = todoState.todos.filter((todo) => todo.completed).length;
-
   function changeDate(date: Date) {
     setSelectedDate(date);
     setSearchParams({ date: toDateKey(date) });
@@ -37,38 +36,22 @@ export function DailyPage() {
     if (toDateKey(date) !== selectedDateKey) changeDate(date);
   }
 
-  const weekday = selectedDate
-    .toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    })
-    .toUpperCase();
-
   return (
     <section className="daily-dashboard">
-      <header className="daily-intro">
-        <div>
-          <p className="daily-kicker">{weekday}</p>
-          <h1>
-            좋은 아침이에요.
-            <br />
-            <strong>오늘도 차분하게 시작해 볼까요?</strong>
-          </h1>
-          <p className="daily-subtitle">
-            작은 완료 하나가 오늘의 흐름을 만듭니다.
-          </p>
+      <div className="planner-top-row">
+        <PlannerAdBanner />
+        <div className="planner-top-controls">
+          <CalendarNav
+            date={selectedDate}
+            label={`${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`}
+            onChange={changeDate}
+            onPrevious={() => changeDate(addDays(selectedDate, -1))}
+            onNext={() => changeDate(addDays(selectedDate, 1))}
+            onToday={() => changeDate(today)}
+            todayLabel="오늘"
+          />
         </div>
-        <CalendarNav
-          date={selectedDate}
-          label={`${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`}
-          onChange={changeDate}
-          onPrevious={() => changeDate(addDays(selectedDate, -1))}
-          onNext={() => changeDate(addDays(selectedDate, 1))}
-          onToday={() => changeDate(today)}
-          todayLabel="오늘"
-        />
-      </header>
+      </div>
 
       <div className="daily-grid">
         <DailyTodoList
@@ -78,7 +61,10 @@ export function DailyPage() {
           onEdit={todoState.editTodo}
           onDelete={todoState.removeTodo}
         />
-        <DailySummary completed={completed} total={todoState.todos.length} />
+        <PlannerMemo
+          storageKey={`day:${selectedDateKey}`}
+          label="오늘의 메모"
+        />
       </div>
 
       <TodoCreateModal

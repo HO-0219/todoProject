@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
 import { CalendarNav } from "../../features/todo/components/CalendarNav";
+import { CalendarExportButton } from "../../features/todo/components/CalendarExportButton";
+import { PlannerMemo } from "../../features/todo/components/PlannerMemo";
+import { PlannerAdBanner } from "../../features/todo/components/PlannerAdBanner";
 import { MonthlyCalendar } from "../../features/todo/components/MonthlyCalendar";
 import { TodoCreateModal } from "../../features/todo/components/TodoCreateModal";
 import { useTodos } from "../../features/todo/hooks/useTodos";
@@ -50,46 +53,60 @@ export function MonthlyPage() {
 
   return (
     <section className="planner-page monthly-planner">
-      <header className="planner-intro">
-        <div>
-          <p>MONTHLY CALENDAR</p>
-          <h1>
-            한 달의 계획을
-            <br />
-            <strong>여유 있게 이어가세요.</strong>
-          </h1>
-          <span>날짜를 선택하면 해당 날짜의 일정을 등록할 수 있어요.</span>
+      <div className="planner-top-row">
+        <PlannerAdBanner />
+        <div className="planner-top-controls">
+          <CalendarNav
+            date={selectedDate}
+            label={`${viewDate.getFullYear()}년 ${viewDate.getMonth() + 1}월`}
+            onChange={selectDate}
+            onPrevious={() => moveMonth(-1)}
+            onNext={() => moveMonth(1)}
+            onToday={goToToday}
+            todayLabel="이번 달"
+          />
         </div>
-        <CalendarNav
-          date={selectedDate}
-          label={`${viewDate.getFullYear()}년 ${viewDate.getMonth() + 1}월`}
-          onChange={selectDate}
-          onPrevious={() => moveMonth(-1)}
-          onNext={() => moveMonth(1)}
-          onToday={goToToday}
-          todayLabel="이번 달"
+      </div>
+
+      <div className="planner-content-grid">
+        <section className="planner-task-card">
+        <div className="planner-card-heading">
+          <div>
+            <p>MY MONTH</p>
+            <h2>
+              이번 달 일정 <span>{todoState.todos.length}</span>
+            </h2>
+          </div>
+        </div>
+
+        <div className="todo-primary-actions">
+          <button
+            className="todo-add-trigger"
+            type="button"
+            onClick={() => setShowCreateModal(true)}
+          >
+            + 일정 추가
+          </button>
+          <CalendarExportButton />
+        </div>
+
+        <MonthlyCalendar
+          dates={calendarDates}
+          todos={todoState.todos}
+          today={today}
+          viewDate={viewDate}
+          selectedDate={selectedDate}
+          onSelectDate={selectDate}
+          onToggle={todoState.toggleTodo}
+          onEdit={todoState.editTodo}
+          onDelete={todoState.removeTodo}
         />
-      </header>
-
-      <button
-        className="todo-add-trigger"
-        type="button"
-        onClick={() => setShowCreateModal(true)}
-      >
-        + 일정 추가
-      </button>
-
-      <MonthlyCalendar
-        dates={calendarDates}
-        todos={todoState.todos}
-        today={today}
-        viewDate={viewDate}
-        selectedDate={selectedDate}
-        onSelectDate={selectDate}
-        onToggle={todoState.toggleTodo}
-        onEdit={todoState.editTodo}
-        onDelete={todoState.removeTodo}
-      />
+        </section>
+        <PlannerMemo
+          storageKey={`month:${range.from}`}
+          label="이번 달 메모"
+        />
+      </div>
 
       <TodoCreateModal
         open={showCreateModal}

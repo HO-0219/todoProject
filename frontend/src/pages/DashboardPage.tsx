@@ -30,7 +30,7 @@ export function DashboardPage() {
   const weekEnd = addDays(weekStart, 6);
   const rangeStart = weekStart < monthStart ? weekStart : monthStart;
   const rangeEnd = weekEnd > monthEnd ? weekEnd : monthEnd;
-  const { todos, loading } = useTodos({
+  const { todos, loading, toggleTodo } = useTodos({
     from: toDateKey(rangeStart),
     to: toDateKey(rangeEnd),
     rangeLabel: "대시보드",
@@ -67,7 +67,7 @@ export function DashboardPage() {
           <DashboardSummaryCards summary={summarizeTodos(monthlyTodos)} />
           <div className="dashboard-main-grid">
             <MonthlyStatsTable rows={createMonthlyRows(monthlyTodos, today)} />
-            <DailyStatsCard todos={todayTodos} />
+            <DailyStatsCard todos={todayTodos} onToggle={toggleTodo} />
           </div>
           <WeeklyStatsChart stats={createWeeklyStats(todos, today)} />
         </>

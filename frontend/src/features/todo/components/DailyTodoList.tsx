@@ -2,6 +2,7 @@ import type { Todo } from "../types";
 import { TodoItemActions } from "./TodoItemActions";
 import { TodoEmptyState } from "./TodoEmptyState";
 import { isPastDateKey } from "../utils/dateUtils";
+import { CalendarExportButton } from "./CalendarExportButton";
 
 type DailyTodoListProps = {
   todos: Todo[];
@@ -29,9 +30,12 @@ export function DailyTodoList({
         </div>
       </div>
 
-      <button className="todo-add-trigger" type="button" onClick={onCreate}>
-        + 일정 추가
-      </button>
+      <div className="todo-primary-actions">
+        <button className="todo-add-trigger" type="button" onClick={onCreate}>
+          + 일정 추가
+        </button>
+        <CalendarExportButton />
+      </div>
 
       <div className="daily-todo-list">
         {todos.length === 0 && <TodoEmptyState onAction={onCreate} />}

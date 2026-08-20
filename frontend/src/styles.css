@@ -932,34 +932,6 @@ button:disabled {
 .daily-dashboard {
   padding-bottom: 28px;
 }
-.daily-intro {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 8px 0 37px;
-}
-.daily-kicker {
-  margin: 0 0 12px;
-  color: #6377dc;
-  font: 700 12px Manrope;
-  letter-spacing: 0.14em;
-}
-.daily-intro h1 {
-  margin: 0;
-  color: #202942;
-  font-size: clamp(29px, 3.2vw, 42px);
-  line-height: 1.34;
-  letter-spacing: -0.055em;
-  font-weight: 500;
-}
-.daily-intro h1 strong {
-  font-weight: 700;
-}
-.daily-subtitle {
-  margin: 13px 0 0;
-  color: #7b859a;
-}
 .daily-calendar-button {
   display: inline-flex;
   align-items: center;
@@ -977,12 +949,11 @@ button:disabled {
 }
 .daily-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.39fr);
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.28fr);
+  align-items: start;
   gap: 22px;
 }
-.daily-todos-card,
-.daily-progress-card,
-.daily-focus-card {
+.daily-todos-card {
   border: 1px solid #e3e7f0;
   border-radius: 19px;
   background: white;
@@ -998,8 +969,7 @@ button:disabled {
   align-items: start;
 }
 .daily-card-heading p,
-.daily-progress-card > p,
-.daily-focus-card p {
+.daily-progress-card > p {
   margin: 0 0 7px;
   color: #7183dd;
   font: 700 11px Manrope;
@@ -1059,12 +1029,14 @@ button:disabled {
   gap: 10px;
 }
 .daily-todo-copy strong {
-  overflow: hidden;
+  min-width: 0;
   color: #303a54;
   font-size: 14px;
   font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 .daily-todo.is-complete .daily-todo-copy strong {
   color: #a0a8b9;
@@ -1083,121 +1055,15 @@ button:disabled {
   color: #8b95aa;
   font: 600 12px Manrope;
 }
-.daily-side-column {
-  display: grid;
-  align-content: start;
-  gap: 22px;
-}
-.daily-progress-card {
-  padding: 27px;
-  background: linear-gradient(145deg, #ffffff, #f7f8ff);
-}
-.daily-progress-main {
-  display: flex;
-  align-items: center;
-  gap: 17px;
-  margin: 22px 0 19px;
-}
-.daily-progress-main > strong {
-  color: #4358bd;
-  font: 700 47px Manrope;
-  letter-spacing: -0.08em;
-}
-.daily-progress-main small {
-  font-size: 20px;
-}
-.daily-progress-main span {
-  color: #7d879d;
-  font-size: 12px;
-  line-height: 1.55;
-}
-.daily-progress-main b {
-  color: #354160;
-}
-.daily-progress-track {
-  height: 10px;
-  overflow: hidden;
-  border-radius: 20px;
-  background: #e4e8f7;
-}
-.daily-progress-track i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #5871e3, #8293f0);
-  transition: width 0.25s ease;
-}
-.daily-progress-message {
-  margin: 16px 0 0;
-  color: #7b8499;
-  font-size: 12px;
-  line-height: 1.55;
-}
-.daily-focus-card {
-  position: relative;
-  overflow: hidden;
-  min-height: 190px;
-  padding: 27px;
-  color: white;
-  background: linear-gradient(135deg, #263776, #5268d0);
-}
-.daily-focus-card p {
-  position: relative;
-  z-index: 1;
-  color: #bdc9ff;
-}
-.daily-focus-card strong {
-  position: relative;
-  z-index: 1;
-  font-size: 20px;
-  line-height: 1.5;
-  letter-spacing: -0.04em;
-}
-.daily-focus-icon {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  margin-bottom: 17px;
-  border-radius: 10px;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.14);
-}
-.daily-focus-orbit {
-  position: absolute;
-  width: 170px;
-  height: 170px;
-  right: -56px;
-  bottom: -85px;
-  border: 30px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-}
 @media (max-width: 800px) {
-  .daily-intro {
-    align-items: start;
-    flex-direction: column;
-    gap: 22px;
-    padding-bottom: 27px;
-  }
   .daily-grid {
     grid-template-columns: 1fr;
-  }
-  .daily-side-column {
-    grid-template-columns: 1fr 1fr;
   }
   .daily-todos-card {
     min-height: auto;
   }
 }
 @media (max-width: 540px) {
-  .daily-intro h1 {
-    font-size: 29px;
-  }
-  .daily-side-column {
-    grid-template-columns: 1fr;
-  }
   .daily-todos-card {
     padding: 22px 18px;
   }
@@ -1217,7 +1083,7 @@ button:disabled {
 
 /* My page */
 .mypage {
-  width: min(860px, 100%);
+  width: min(960px, 100%);
   margin: 0 auto;
   padding-bottom: 38px;
 }
@@ -1259,6 +1125,26 @@ button:disabled {
   padding-bottom: 25px;
   border-bottom: 1px solid #edf0f5;
 }
+.mypage-profile-copy {
+  min-width: 0;
+  flex: 1;
+}
+.mypage-profile-copy > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b7ed8;
+  font: 700 10px Manrope;
+  letter-spacing: 0.12em;
+}
+.mypage-account-badge {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border-radius: 20px;
+  color: #596dca;
+  background: #eef1ff;
+  font-size: 11px;
+  font-weight: 700;
+}
 .mypage-avatar {
   display: grid;
   width: 54px;
@@ -1285,29 +1171,37 @@ button:disabled {
 }
 .mypage-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
   margin-top: 26px;
 }
-.mypage-fields label {
-  display: grid;
-  gap: 8px;
+.mypage-fields article {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 17px;
+  border: 1px solid #dfe4ed;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #fafbff, #f5f7fc);
 }
-.mypage-fields label > span {
-  color: #677288;
-  font-size: 12px;
+.mypage-fields article > div {
+  min-width: 0;
+}
+.mypage-fields article > div > span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8993a7;
+  font-size: 10px;
   font-weight: 700;
 }
-.mypage-fields input {
-  width: 100%;
-  height: 45px;
-  padding: 0 13px;
-  border: 1px solid #dfe4ed;
-  border-radius: 10px;
-  color: #48536b;
-  background: #f7f8fb;
-  box-sizing: border-box;
-  font: inherit;
+.mypage-fields article strong {
+  display: block;
+  overflow: hidden;
+  color: #3c4861;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .mypage-danger-zone {
   display: flex;
@@ -1694,12 +1588,31 @@ button:disabled {
   color: #4d5972;
   font-size: 12px;
 }
-.dashboard-daily-panel li span {
+.dashboard-daily-panel li button {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
   color: #6379dc;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
 }
-.dashboard-daily-panel li span.is-complete + strong {
+.dashboard-daily-panel li button:hover {
+  background: #edf0ff;
+}
+.dashboard-daily-panel li button.is-complete + strong {
   color: #a0a8b8;
   text-decoration: line-through;
+}
+.dashboard-daily-panel li strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .dashboard-daily-panel li.is-empty {
   color: #929caf;
@@ -1827,47 +1740,170 @@ button:disabled {
 .planner-page {
   padding-bottom: 35px;
 }
-.planner-intro {
+.planner-nav-only {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 25px;
+  justify-content: flex-end;
   margin: 7px 0 30px;
 }
-.planner-intro p {
-  margin: 0 0 11px;
-  color: #6176dd;
-  font: 700 12px Manrope;
-  letter-spacing: 0.14em;
+.planner-top-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.28fr);
+  align-items: center;
+  gap: 22px;
+  margin: 7px 0 30px;
 }
-.planner-intro h1 {
-  margin: 0;
-  color: #222c47;
-  font-size: clamp(29px, 3.1vw, 41px);
-  line-height: 1.32;
-  letter-spacing: -0.055em;
-  font-weight: 500;
+.planner-top-controls {
+  display: flex;
+  justify-content: flex-end;
 }
-.planner-intro h1 strong {
-  font-weight: 700;
+.planner-ad-banner {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 88px;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  overflow: hidden;
+  padding: 18px 25px;
+  border: 1px dashed #cfd6e4;
+  border-radius: 17px;
+  color: #68748a;
+  background: linear-gradient(135deg, #fafbfe, #f5f7fb);
+  box-shadow: 0 8px 22px rgba(43, 57, 99, 0.025);
+  box-sizing: border-box;
 }
-.planner-intro span {
+.planner-ad-banner > span {
+  display: grid;
+  width: 29px;
+  height: 23px;
+  flex: 0 0 29px;
+  place-items: center;
+  border: 1px solid #c8d0df;
+  border-radius: 6px;
+  color: #7e899d;
+  background: #fff;
+  font: 700 9px Manrope;
+}
+.planner-ad-banner > div {
+  min-width: 0;
+}
+.planner-ad-banner strong {
   display: block;
-  margin-top: 12px;
-  color: #7d879a;
+  color: #68748a;
   font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.planner-ad-banner p {
+  margin: 4px 0 0;
+  color: #a0a9b8;
+  font: 600 8px Manrope;
+  letter-spacing: 0.16em;
+}
+.planner-task-card {
+  min-width: 0;
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid #e3e7f0;
+  border-radius: 19px;
+  background: white;
+  box-shadow: 0 12px 32px rgba(42, 54, 97, 0.045);
+}
+.planner-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.28fr);
+  align-items: start;
+  gap: 22px;
+}
+.planner-card-heading p {
+  margin: 0 0 7px;
+  color: #7183dd;
+  font: 700 11px Manrope;
+  letter-spacing: 0.13em;
+}
+.planner-card-heading h2 {
+  margin: 0;
+  color: #242e49;
+  font-size: 23px;
+  letter-spacing: -0.04em;
+}
+.planner-card-heading h2 span {
+  margin-left: 5px;
+  color: #8490aa;
+  font: 600 15px Manrope;
+}
+.planner-task-card > .todo-primary-actions {
+  margin: 24px 0 18px;
+}
+.planner-task-card .month-calendar {
+  box-shadow: none;
+}
+.planner-memo-card {
+  overflow: hidden;
+  padding: 25px 24px;
+  border: 1px solid #e3e7f0;
+  border-radius: 19px;
+  background: linear-gradient(180deg, #fffef8, #fffdf3);
+  box-shadow: 0 12px 32px rgba(42, 54, 97, 0.045);
+}
+.planner-memo-card header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.planner-memo-card header p {
+  margin: 0 0 6px;
+  color: #c28d3e;
+  font: 700 11px Manrope;
+  letter-spacing: 0.13em;
+}
+.planner-memo-card h2 {
+  margin: 0;
+  color: #3d4253;
+  font-size: 18px;
+  letter-spacing: -0.04em;
+}
+.planner-memo-card header > span {
+  color: #a19a88;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.planner-memo-card textarea {
+  width: 100%;
+  min-height: 285px;
+  resize: vertical;
+  padding: 4px 2px;
+  border: 0;
+  outline: 0;
+  color: #55584f;
+  background: repeating-linear-gradient(
+    transparent 0,
+    transparent 29px,
+    #e9e2ce 30px
+  );
+  font: 500 13px/30px "Noto Sans KR", sans-serif;
+}
+.planner-memo-card textarea::placeholder {
+  color: #aaa696;
 }
 .week-grid {
   display: grid;
+  min-width: 0;
+  max-width: 100%;
   grid-template-columns: repeat(7, minmax(145px, 1fr));
   gap: 10px;
   overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
   padding-bottom: 10px;
 }
 .week-day-card {
   display: flex;
   min-height: 400px;
   min-width: 145px;
+  scroll-snap-align: start;
   flex-direction: column;
   border: 1px solid #e3e7f0;
   border-radius: 15px;
@@ -1894,6 +1930,7 @@ button:disabled {
 }
 .week-todo {
   display: grid;
+  min-width: 0;
   gap: 8px;
   padding: 14px 12px;
   border-bottom: 1px solid #f0f2f7;
@@ -1908,10 +1945,13 @@ button:disabled {
   background: #6579df;
 }
 .week-todo strong {
+  min-width: 0;
   color: #4c5872;
   font-size: 12px;
   line-height: 1.45;
-  word-break: keep-all;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 .week-todo.is-complete strong {
   color: #a1a9b9;
@@ -1998,6 +2038,7 @@ button:disabled {
   padding: 4px;
   border-radius: 5px;
   background: #edf0ff;
+  min-width: 0;
 }
 .month-todo > button {
   padding: 0;
@@ -2007,12 +2048,14 @@ button:disabled {
   font-size: 10px;
 }
 .month-todo strong {
-  overflow: hidden;
+  min-width: 0;
   flex: 1;
   color: #5164ba;
   font-size: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 .month-todo.is-complete {
   background: #f1f3f6;
@@ -2036,9 +2079,17 @@ button:disabled {
   opacity: 1;
 }
 @media (max-width: 800px) {
-  .planner-intro {
-    align-items: start;
-    flex-direction: column;
+  .planner-top-row {
+    grid-template-columns: 1fr;
+  }
+  .planner-top-controls {
+    justify-content: flex-start;
+  }
+  .planner-content-grid {
+    grid-template-columns: 1fr;
+  }
+  .planner-memo-card textarea {
+    min-height: 180px;
   }
   .month-calendar {
     overflow-x: auto;
@@ -2049,7 +2100,7 @@ button:disabled {
   }
 }
 @media (max-width: 540px) {
-  .planner-intro .daily-calendar-button {
+  .planner-nav-only .daily-calendar-button {
     width: 100%;
   }
   .todo-item-actions {
@@ -2237,12 +2288,40 @@ button:disabled {
   background: #5067d2;
 }
 
-.planner-page > .todo-add-trigger {
+.todo-primary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.planner-page > .todo-primary-actions {
   margin-bottom: 20px;
 }
 
-.daily-todos-card > .todo-add-trigger {
+.daily-todos-card > .todo-primary-actions {
   margin: 29px 0 15px;
+}
+
+.calendar-export-button {
+  min-height: 43px;
+  padding: 0 17px;
+  border: 1px solid #d9dfef;
+  border-radius: 10px;
+  color: #4f61b7;
+  background: #f7f8ff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.calendar-export-button:hover:not(:disabled) {
+  border-color: #bfc9ee;
+  background: #eef1ff;
+}
+
+.calendar-export-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .todo-modal-backdrop {
@@ -2328,7 +2407,7 @@ button:disabled {
 
 .todo-modal-date-fields output,
 .todo-date-picker-trigger,
-.todo-modal-content-field input {
+.todo-modal-content-field textarea {
   width: 100%;
   height: 45px;
   padding: 0 13px;
@@ -2351,7 +2430,7 @@ button:disabled {
 }
 
 .todo-date-picker-trigger:focus,
-.todo-modal-content-field input:focus {
+.todo-modal-content-field textarea:focus {
   border-color: #7184df;
   box-shadow: 0 0 0 3px rgba(99, 120, 220, 0.12);
 }
@@ -2419,8 +2498,31 @@ button:disabled {
   margin-top: 20px;
 }
 
-.todo-modal-content-field input::placeholder {
+.todo-modal-content-field textarea {
+  height: auto;
+  min-height: 105px;
+  padding: 12px 13px;
+  resize: vertical;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.todo-modal-content-field textarea::placeholder {
   color: #a2abbd;
+}
+
+.todo-content-counter {
+  display: block;
+  margin-top: 7px;
+  color: #929caf;
+  font: 600 11px Manrope;
+  text-align: right;
+}
+
+.todo-content-counter.is-near-limit {
+  color: #d15f73;
 }
 
 .todo-modal-actions {

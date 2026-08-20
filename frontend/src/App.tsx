@@ -31,7 +31,7 @@ function OAuthCallbackPage() {
       .refresh()
       .then((token) => {
         localStorage.setItem("accessToken", token.accessToken);
-        navigate("/");
+        navigate("/dashboard");
       })
       .catch(() => setFailed(true));
   }, [navigate]);

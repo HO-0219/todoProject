@@ -1,7 +1,12 @@
 import type { Todo } from "../../todo/types";
 import { summarizeTodos } from "../utils/dashboardStats";
 
-export function DailyStatsCard({ todos }: { todos: Todo[] }) {
+type DailyStatsCardProps = {
+  todos: Todo[];
+  onToggle: (todo: Todo) => void;
+};
+
+export function DailyStatsCard({ todos, onToggle }: DailyStatsCardProps) {
   const summary = summarizeTodos(todos);
   return (
     <section className="dashboard-panel dashboard-daily-panel">
@@ -32,9 +37,15 @@ export function DailyStatsCard({ todos }: { todos: Todo[] }) {
         ) : (
           todos.slice(0, 4).map((todo) => (
             <li key={todo.id}>
-              <span className={todo.completed ? "is-complete" : ""}>
+              <button
+                className={todo.completed ? "is-complete" : ""}
+                type="button"
+                aria-label={`${todo.title} ${todo.completed ? "완료 취소" : "완료"}`}
+                aria-pressed={todo.completed}
+                onClick={() => onToggle(todo)}
+              >
                 {todo.completed ? "✓" : "○"}
-              </span>
+              </button>
               <strong>{todo.title}</strong>
             </li>
           ))

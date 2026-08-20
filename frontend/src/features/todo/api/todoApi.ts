@@ -1,4 +1,4 @@
-import { request } from "../../../api";
+import { request, requestBlob } from "../../../api";
 import type { Todo, TodoCreateRequest, TodoUpdateRequest } from "../types";
 
 export type TodoApi = {
@@ -7,6 +7,7 @@ export type TodoApi = {
   create(request: TodoCreateRequest): Promise<Todo>;
   update(todoId: number, request: TodoUpdateRequest): Promise<Todo>;
   toggleCompletion(todoId: number): Promise<Todo>;
+  exportCalendar(): Promise<Blob>;
   remove(todoId: number): Promise<void>;
 };
 
@@ -50,6 +51,10 @@ export const todoApi: TodoApi = {
       },
       true,
     );
+  },
+
+  exportCalendar() {
+    return requestBlob("/todos/export");
   },
 
   remove(todoId) {
